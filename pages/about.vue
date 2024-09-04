@@ -22,7 +22,12 @@
 </template>
 
 <script setup>
-// No additional setup needed for this simple about page
+useSeoMeta({
+  title: 'Illuminovel - AI Book Illustrations',
+  ogTitle: 'Illuminovel - AI Book Illustrations',
+  description: 'Generate AI illustrations of your favorite book characters.',
+  ogDescription: 'Generate AI illustrations of your favorite book characters.',
+})
 </script>
 
 <style scoped>

@@ -55,7 +55,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+useSeoMeta({
+  title: 'Illuminovel - AI Book Illustrations',
+  ogTitle: 'Illuminovel - AI Book Illustrations',
+  description: 'Generate AI illustrations of your favorite book characters.',
+  ogDescription: 'Generate AI illustrations of your favorite book characters.',
+})
 
 const fileInput = ref(null);
 const selectedFile = ref(null);
@@ -157,12 +162,6 @@ const handleSubmit = async (event) => {
         }
     } else {
         console.log('No file selected');
-    }
-};
-
-const shareResults = () => {
-    if (sharedId.value) {
-        navigateTo(`/share/${sharedId.value}`);
     }
 };
 

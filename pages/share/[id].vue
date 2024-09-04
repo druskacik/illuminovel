@@ -18,6 +18,13 @@
 
 <script setup>
 
+useSeoMeta({
+  title: 'Illuminovel - AI Book Illustrations',
+  ogTitle: 'Illuminovel - AI Book Illustrations',
+  description: 'Generate AI illustrations of your favorite book characters.',
+  ogDescription: 'Generate AI illustrations of your favorite book characters.',
+})
+
 const route = useRoute();
 const error = ref(null);
 
