@@ -99,7 +99,6 @@ const featuredCreations = [
 
 
 const onFileChange = (files) => {
-    console.log('files', files);
     selectedFile.value = files[0];
 };
 
@@ -125,8 +124,6 @@ const handleSubmit = async (event) => {
                         },
                         responseType: 'stream',
                     });
-
-                    console.log('response', response);
 
                     const reader = response.getReader()
                     const decoder = new TextDecoder()

@@ -19,8 +19,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { name, file, fileType } = body;
 
-    console.log('fileType', fileType);
-
     if (!file) {
       console.log('No file provided')
       return createError({
@@ -86,7 +84,6 @@ async function processTextAndStream(text, stream) {
         bookName: bookName,
         characters: characters,
       })
-      console.log('Characters saved to MongoDB', result);
       stream.write(JSON.stringify({
         _id: result.insertedId,
       }) + '\n');

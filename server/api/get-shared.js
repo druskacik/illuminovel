@@ -7,8 +7,6 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const id = query.id;
 
-  console.log('query', query);
-
   if (!id) {
     return createError({
       statusCode: 400,

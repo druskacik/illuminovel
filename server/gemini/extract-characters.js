@@ -85,7 +85,6 @@ export async function* extractCharacters(text) {
     // Generate content
     const result = await getResponseBackOff(chat, prompt);
     const responseText = result.response.text();
-    console.log('responseText', responseText);
 
     const bookName = JSON.parse(responseText).bookName;
     const characterList = JSON.parse(responseText).characters;
