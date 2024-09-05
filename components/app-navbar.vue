@@ -7,10 +7,10 @@
         </div>
         <div class="hidden sm:flex sm:items-center sm:space-x-8">
           <NuxtLink 
-            to="https://t.me/robertdruska" 
+            to="https://t.me/rdruska" 
             :class="[
               'inline-flex items-center px-1 pt-1 text-sm font-medium h-full',
-              isActive('https://t.me/robertdruska') 
+              isActive('https://t.me/rdruska') 
                 ? 'border-b-2 border-indigo-500 text-gray-900' 
                 : 'text-gray-500 hover:text-gray-700'
             ]"

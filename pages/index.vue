@@ -10,19 +10,22 @@
                 </p>
                 <UCard class="max-w-md mx-auto">
                     <UForm @submit="handleSubmit">
-                        <UFormGroup label="Start your journey">
+                        <UFormGroup label="Supported formats: PDF, EPUB">
                             <UInput ref="fileInput" type="file" accept=".pdf,.epub" placeholder="Choose your book file"
                                 @change="onFileChange" />
                         </UFormGroup>
+                        <div v-if="!isValidFileType && selectedFile" class="mt-2 text-center text-red-500">
+                            Please select a PDF or EPUB file.
+                        </div>
                         <UButton type="submit" class="w-full mt-4" color="primary" size="lg" :loading="isLoading"
-                            :disabled="!selectedFile">
+                            :disabled="!selectedFile || !isValidFileType">
                             {{ isLoading ? 'Generating...' : 'Generate Illustrations' }}
                         </UButton>
                     </UForm>
                 </UCard>
                 <div v-if="isLoading" class="mt-4 text-center">
                     <p class="text-lg text-amber-600 font-semibold">
-                        Generation in progress. This may take a few minutes.
+                        Generation in progress. The first generation might take 1 to 2 minutes, after that a new character illustration will be generated every 10-20 seconds.
                     </p>
                     <p class="text-md text-amber-600">
                         Please do not close this tab.
@@ -68,6 +71,7 @@ const characters = ref([]);
 const isLoading = ref(false);
 const sharedId = ref(null);
 const linkCopied = ref(false);
+const isValidFileType = ref(false);
 
 const featuredCreations = [
     {
@@ -99,16 +103,32 @@ const featuredCreations = [
         imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725483160/jwof9yfwcjkbajnozduy.jpg',
         characterName: 'Paul Atreides',
         id: '66d8c9de9f11cff9518b0a69'
-    }
+    },
+    {
+        bookTitle: 'The Great Gatsby',
+        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725521014/iblfffkyj1ixriaunq6g.jpg',
+        characterName: 'Jay Gatsby',
+        id: '66d95d6358a2c9ec13cdddd3'
+    },
 ]
-
 
 const onFileChange = (files) => {
     selectedFile.value = files[0];
+    isValidFileType.value = validateFileType(selectedFile.value);
+};
+
+const validateFileType = (file) => {
+    if (!file) return false;
+    const validTypes = ['application/pdf', 'application/epub+zip'];
+    return validTypes.includes(file.type);
 };
 
 const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!isValidFileType.value) {
+        console.log('Invalid file type');
+        return;
+    }
     characters.value = [];
     sharedId.value = null;
     if (selectedFile.value) {
