@@ -21,6 +21,7 @@ const sendOrderSuccessfulEmail = async (email, resultsUrl) => {
         });
 
         const options = {
+            from: process.env.MAIL_USER,
             to: email,
             subject: 'Illuminovel - Order Successful',
             text,
