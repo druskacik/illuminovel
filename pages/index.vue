@@ -8,108 +8,86 @@
                 <p class="text-xl text-center mb-8">
                     Upload your favorite book and watch as AI imagines the characters for you.
                 </p>
-                <UCard class="max-w-md mx-auto">
-                    <UForm @submit="handleSubmit">
-                        <UFormGroup label="Supported formats: PDF, EPUB">
-                            <UInput ref="fileInput" type="file" accept=".pdf,.epub" placeholder="Choose your book file"
-                                @change="onFileChange" />
-                        </UFormGroup>
-                        <div v-if="!isValidFileType && selectedFile" class="mt-2 text-center text-red-500">
-                            Please select a PDF or EPUB file.
+                <UTabs :items="items" class="w-full">
+                    <template #item="{ item }">
+                        <div class="mt-8">
+                            <template v-if="item.key === 'search'">
+                                <UCard class="max-w-md mx-auto">
+                                    <UForm @submit="handleSearch">
+                                        <UInput v-model="searchQuery" placeholder="Search for a book..." />
+                                        <UButton icon="i-heroicons-magnifying-glass" type="submit" class="w-full mt-4"
+                                            color="primary" size="lg" :loading="isLoading">
+                                            {{ isLoading ? 'Searching...' : 'Search Libgen Library' }}
+                                        </UButton>
+                                    </UForm>
+                                </UCard>
+                                <div v-if="books">
+                                    <h2 class="text-2xl font-semibold mt-4 mb-4">Search Results for <i>{{
+                                            searchQuerySubmitted }}</i></h2>
+                                    <p v-if="books.length === 0">No books found :(</p>
+                                    <SearchResults v-else :books="books" />
+                                </div>
+                            </template>
+                            <template v-if="item.key === 'upload'">
+                                <UCard class="max-w-md mx-auto">
+                                    <UForm @submit="openStripeCheckout">
+                                        <UFormGroup label="Supported formats: PDF, EPUB">
+                                            <UInput ref="fileInput" type="file" accept=".pdf,.epub"
+                                                placeholder="Choose your book file" @change="onFileChange" />
+                                        </UFormGroup>
+                                        <div v-if="!isValidFileType && selectedFile"
+                                            class="mt-2 text-center text-red-500">
+                                            Please select a PDF or EPUB file.
+                                        </div>
+                                        <UButton icon="i-heroicons-sparkles" type="submit" class="w-full mt-4"
+                                            color="primary" size="lg" :loading="isLoading"
+                                            :disabled="!selectedFile || !isValidFileType">
+                                            {{ isLoading ? 'Processing...' : 'Illustrate book for $2' }}
+                                        </UButton>
+                                    </UForm>
+                                </UCard>
+                            </template>
                         </div>
-                        <UButton type="submit" class="w-full mt-4" color="primary" size="lg" :loading="isLoading"
-                            :disabled="!selectedFile || !isValidFileType">
-                            {{ isLoading ? 'Generating...' : 'Generate Illustrations' }}
-                        </UButton>
-                    </UForm>
-                </UCard>
-                <div v-if="isLoading" class="mt-4 text-center">
-                    <p class="text-lg text-amber-600 font-semibold">
-                        Generation in progress. The first generation might take 1 to 2 minutes, after that a new character illustration will be generated every 10-20 seconds.
-                    </p>
-                    <p class="text-md text-amber-600">
-                        Please do not close this tab.
-                    </p>
-                </div>
-                <div v-if="characters.length > 0 || isLoading" class="mt-8">
-                    <h2 class="text-2xl font-semibold mb-4">Generated Illustrations</h2>
-                    <div v-if="!isLoading && sharedId" class="mt-4 mb-4 flex items-center">
-                        <p class="mr-2">Share:</p>
-                        <UButton @click="copyShareLink" :icon="linkCopied ? 'i-heroicons-check' : 'i-heroicons-clipboard'" color="primary" variant="soft" :disabled="linkCopied">
-                            {{ linkCopied ? 'Link copied' : 'Copy link' }}
-                        </UButton>
-                    </div>
-                    <ImageGallery :characters="characters" :loading="isLoading" />
-                </div>
-            </div>
-        </UContainer>
-        <UContainer class="mt-16">
-            <h2 class="text-3xl font-bold text-center mb-8">Made with Illuminovel</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <UCard v-for="(creation, index) in featuredCreations" :key="index">
-                    <template #header>
-                        <NuxtLink :to="`/share/${creation.id}`" class="text-lg font-semibold">{{ creation.bookTitle }}</NuxtLink>
                     </template>
-                    <img :src="creation.imageUrl" :alt="creation.characterName" class="w-full h-64 object-cover">
-                </UCard>
+                </UTabs>
             </div>
         </UContainer>
+        <FeaturedCreations />
     </div>
+    <UNotifications />
 </template>
 
 <script setup>
 useSeoMeta({
-  title: 'Illuminovel - AI Book Illustrations',
-  ogTitle: 'Illuminovel - AI Book Illustrations',
-  description: 'Generate AI illustrations of your favorite book characters.',
-  ogDescription: 'Generate AI illustrations of your favorite book characters.',
+    title: 'Illuminovel - AI Book Illustrations',
+    ogTitle: 'Illuminovel - AI Book Illustrations',
+    description: 'Generate AI illustrations of your favorite book characters.',
+    ogDescription: 'Generate AI illustrations of your favorite book characters.',
 })
 
+const toast = useToast()
+
+const searchQuery = ref('');
+const searchQuerySubmitted = ref('');
+const books = ref(null);
 const fileInput = ref(null);
 const selectedFile = ref(null);
-const characters = ref([]);
 const isLoading = ref(false);
-const sharedId = ref(null);
-const linkCopied = ref(false);
 const isValidFileType = ref(false);
 
-const featuredCreations = [
+const items = [
     {
-        bookTitle: "Harry Potter and the Philosopher's Stone",
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725456323/f6asussonn2rbc45dmzi.jpg',
-        characterName: 'Harry Potter',
-        id: '66d860b25adb04d43d1af28e',
+        key: 'search',
+        label: 'Search Libgen Library',
+        icon: 'i-heroicons-magnifying-glass',
+        description: 'Search for a book and generate illustrations for it.',
     },
     {
-        bookTitle: 'The Fellowship of the Ring',
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725460814/btyezkihvzbftjvtgvbi.jpg',
-        characterName: 'Frodo Baggins',
-        id: '66d872794c811a39798c8188',
-    },
-    {
-        bookTitle: 'Leviathan Wakes (The Expanse, #1)',
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725461223/wyqq97pry2b7sbosqciz.jpg',
-        characterName: 'James Holden',
-        id: '66d876054c811a39798c8189',
-    },
-    {
-        bookTitle: 'A Game of Thrones (A Song of Ice and Fire, #1)',
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725478334/uwh7a7gdmvngccczmek1.jpg',
-        characterName: 'Eddard Stark',
-        id: '66d8b6d18e203cb6965b8335',
-    },
-    {
-        bookTitle: 'Dune',
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725483160/jwof9yfwcjkbajnozduy.jpg',
-        characterName: 'Paul Atreides',
-        id: '66d8c9de9f11cff9518b0a69'
-    },
-    {
-        bookTitle: 'The Great Gatsby',
-        imageUrl: 'https://res.cloudinary.com/sparing/image/upload/v1725521014/iblfffkyj1ixriaunq6g.jpg',
-        characterName: 'Jay Gatsby',
-        id: '66d95d6358a2c9ec13cdddd3'
-    },
+        key: 'upload',
+        label: 'Upload your own book',
+        icon: 'i-heroicons-paper-clip',
+        description: 'Upload a PDF or EPUB file and generate illustrations for it.',
+    }
 ]
 
 const onFileChange = (files) => {
@@ -123,50 +101,82 @@ const validateFileType = (file) => {
     return validTypes.includes(file.type);
 };
 
-const handleSubmit = async (event) => {
+const handleSearch = async () => {
+    isLoading.value = true;
+    const title = searchQuery.value;
+    searchQuerySubmitted.value = title;
+
+    try {
+        const response = await $fetch(`/api/search-book?query=${encodeURIComponent(title)}`, {
+            method: 'GET',
+        });
+
+        books.value = response;
+    } catch (error) {
+        toast.add({
+            title: 'Error',
+            description: error.message,
+            color: 'rose',
+            timeout: 0,
+        });
+    } finally {
+        isLoading.value = false;
+    }
+}
+
+const openStripeCheckout = async (event) => {
     event.preventDefault();
     if (!isValidFileType.value) {
         console.log('Invalid file type');
         return;
     }
-    characters.value = [];
-    sharedId.value = null;
+    isLoading.value = true;
     if (selectedFile.value) {
+        isLoading.value = true;
         const file = selectedFile.value;
         try {
-            isLoading.value = true;
+            const extension = getFileExtension(file.type);
             const reader = new FileReader();
             reader.onload = async (e) => {
-                const base64File = e.target.result.split(',')[1];
                 try {
-                    const response = await $fetch('/api/get-images', {
-                    // const response = await $fetch('/api/get-images-dummy', {
+                    const base64File = e.target.result.split(',')[1];
+                    await $fetch('/api/upload-book', {
                         method: 'POST',
                         body: {
                             name: file.name,
                             file: base64File,
-                            fileType: file.type,
+                            extension: extension,
                         },
-                        responseType: 'stream',
                     });
-
-                    const reader = response.getReader()
-                    const decoder = new TextDecoder()
-
-                    while (true) {
-                        const { done, value } = await reader.read()
-                        if (done) break
-
-                        let chunk = decoder.decode(value)
-                        chunk = JSON.parse(chunk)
-                        if (!chunk._id) {
-                            characters.value.push(chunk)
-                        } else {
-                            sharedId.value = chunk._id;
-                        }
+                    
+                    const { url } = await $fetch('/api/create-checkout-session', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            book: {
+                                filename: file.name,
+                                title: file.name,
+                                extension: extension,
+                            }
+                        }),
+                    });
+    
+                    if (url) {
+                        await navigateTo(url, {
+                            external: true,
+                            open: {
+                                target: '_blank',
+                            }
+                        });
+                    } else {
+                        throw new Error('Failed to create checkout session');
                     }
                 } catch (error) {
-                    console.error('Error sending file to server:', error);
+                    console.error('Error processing file:', error);
+                    toast.add({
+                        title: 'Error',
+                        description: 'An error occurred while processing your file.',
+                        color: 'rose',
+                    });
                 } finally {
                     isLoading.value = false;
                 }
@@ -174,32 +184,33 @@ const handleSubmit = async (event) => {
             reader.onerror = (error) => {
                 console.error('Error reading file:', error);
                 isLoading.value = false;
+                toast.add({
+                    title: 'Error',
+                    description: 'An error occurred while reading your file.',
+                    color: 'rose',
+                });
             };
             reader.readAsDataURL(file);
         } catch (error) {
             console.error('Error processing file:', error);
             isLoading.value = false;
+            toast.add({
+                title: 'Error',
+                description: 'An error occurred while preparing to read your file.',
+                color: 'rose',
+            });
         }
-    } else {
-        console.log('No file selected');
     }
 };
 
-const shareLink = computed(() => {
-    return sharedId.value ? `https://illuminovel.com/share/${sharedId.value}` : null;
-});
-
-const copyShareLink = () => {
-    if (shareLink.value) {
-        navigator.clipboard.writeText(shareLink.value);
-        linkCopied.value = true;
-        setTimeout(() => {
-            linkCopied.value = false;
-        }, 2000);
+const getFileExtension = (fileType) => {
+    if (fileType === 'application/pdf') {
+        return 'pdf';
+    } else if (fileType === 'application/epub+zip') {
+        return 'epub';
     }
-};
+    return null;
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

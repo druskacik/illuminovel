@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:host": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -12,11 +13,19 @@
   "dependencies": {
     "@google/generative-ai": "^0.17.1",
     "@nuxt/ui": "^2.18.4",
+    "@unlok-co/nuxt-stripe": "^3.0.0",
+    "agenda": "^5.0.0",
+    "cheerio": "^1.0.0",
     "cloudinary": "^2.4.0",
     "dotenv": "^16.4.5",
     "epub": "^1.2.1",
     "exponential-backoff": "^3.1.1",
+    "jsdom": "^25.0.0",
+    "libgen": "^2.2.0",
+    "minio": "^8.0.1",
     "mongodb": "^6.8.0",
+    "mustache": "^4.2.0",
+    "nodemailer": "^6.9.15",
     "nuxt": "^3.13.0",
     "nuxt-umami": "^2.6.4",
     "vue": "latest"
