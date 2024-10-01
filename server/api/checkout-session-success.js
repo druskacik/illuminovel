@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
         }
     } catch (error) {
         console.error('Error verifying checkout session:', error);
-        throw createError({
+        return createError({
             statusCode: 500,
             message: 'Failed to verify checkout session',
         });

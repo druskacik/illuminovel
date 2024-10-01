@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
         return { url: session.url };
     } catch (error) {
         console.error('Error creating checkout session:', error);
-        throw createError({
+        return createError({
             statusCode: 500,
             message: 'Failed to create checkout session',
         });
