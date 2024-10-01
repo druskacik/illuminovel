@@ -7,7 +7,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: '',
-    }
+      stripe: {
+        key: '',
+      },
+    },
+    stripe: {
+      key: '',
+    },
   },
   colorMode: {
     preference: 'light'
@@ -15,7 +21,7 @@ export default defineNuxtConfig({
   stripe: {
     // Server
     server: {
-      key: process.env.NUXT_STRIPE_SECRET_KEY,
+      key: process.env.NUXT_STRIPE_KEY,
       options: {
         // your api options override for stripe server side
         // https://github.com/stripe/stripe-node?tab=readme-ov-file#configuration
@@ -23,7 +29,7 @@ export default defineNuxtConfig({
     // CLIENT
     },
     client: {
-      key: process.env.NUXT_PUBLIC_STRIPE_PUBLIC_KEY,
+      key: process.env.NUXT_PUBLIC_STRIPE_KEY,
       // your api options override for stripe client side https://stripe.com/docs/js/initializing#init_stripe_js-options
       options: {},
     },
