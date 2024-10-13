@@ -11,6 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@dsnp/parquetjs": "^1.8.4",
     "@google/generative-ai": "^0.17.1",
     "@nuxt/ui": "^2.18.4",
     "@unlok-co/nuxt-stripe": "^3.0.0",
@@ -21,6 +22,7 @@
     "epub": "^1.2.1",
     "exponential-backoff": "^3.1.1",
     "jsdom": "^25.0.0",
+    "knex": "^3.1.0",
     "libgen": "^2.2.0",
     "minio": "^8.0.1",
     "mongodb": "^6.8.0",
@@ -28,6 +30,8 @@
     "nodemailer": "^6.9.15",
     "nuxt": "^3.13.0",
     "nuxt-umami": "^2.6.4",
+    "openai": "^4.67.3",
+    "pg": "^8.13.0",
     "vue": "latest"
   }
 }

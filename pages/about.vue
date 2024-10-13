@@ -1,7 +1,7 @@
 <template>
   <div class="pt-20 pb-20">
     <UContainer>
-      <h1 class="text-4xl font-bold mb-6">About</h1>
+      <h1 class="text-4xl font-bold mb-6">About AI illustrations</h1>
       <p class="text-lg mb-4">
         The project uses <a href="https://ai.google.dev/gemini-api" target="_blank">Gemini</a> to extract book characters with their description
         and <a href="https://getimg.ai/text-to-image?via=flux1io" target="_blank">Flux</a> to generate the illustrations.
