@@ -35,7 +35,7 @@
             </template>
             <template #option="{ option: book }">
               <div class="flex items-center">
-                <img :src="book.imageUrl" :alt="book.title" class="w-12 h-16 object-cover mr-4">
+                <!-- <img :src="book.imageUrl" :alt="book.title" class="w-12 h-16 object-cover mr-4"> -->
                 <div>
                   <div class="font-semibold">{{ book.title }}</div>
                   <div class="text-sm text-gray-500">{{ book.author }}</div>
@@ -190,8 +190,6 @@ const search = async (q) => {
     return []
   }
   isSuggestionLoading.value = true
-  // Simulate a delay of 5 seconds
-  await new Promise(resolve => setTimeout(resolve, 5000));
   const books = await $fetch(`/api/suggest-book?q=${q}`)
   isSuggestionLoading.value = false
 

@@ -11,6 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@babel/runtime": "^7.25.7",
     "@dsnp/parquetjs": "^1.8.4",
     "@google/generative-ai": "^0.17.1",
     "@nuxt/ui": "^2.18.4",
@@ -32,6 +33,7 @@
     "nuxt-umami": "^2.6.4",
     "openai": "^4.67.3",
     "pg": "^8.13.0",
+    "typesense": "^1.8.2",
     "vue": "latest"
   }
 }

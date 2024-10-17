@@ -6,7 +6,7 @@ import { generateSoundtrackDescription } from '../services/openai';
 export default defineEventHandler(async (event) => {
 
     const book = await readBody(event);
-    const { bookId, bookUrl, title, author } = book;
+    const { bookId, title, author } = book;
 
     // Check if a playlist for the given bookId already exists in the DB
     const existingPlaylist = await knex('playlist')
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
             artist: item.track.artists[0].name,
         }))),
         book_id: bookId,
-        book_url: bookUrl,
+        book_url: `https://www.wikidata.org/wiki/${bookId}`,
         book_title: title,
         book_author: author,
     });

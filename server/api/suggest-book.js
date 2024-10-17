@@ -1,3 +1,15 @@
+import { SearchClient as TypesenseSearchClient } from "typesense";
+
+let client = new TypesenseSearchClient({
+  'nodes': [{
+    'host': process.env.TYPESENSE_HOST,
+    'port': process.env.TYPESENSE_PORT,
+    'protocol': 'http'
+  }],
+  'apiKey': process.env.TYPESENSE_API_KEY,
+  'connectionTimeoutSeconds': 2
+})
+
 export default defineEventHandler(async (event) => {
   try {
     const { q: query } = getQuery(event);
@@ -9,23 +21,18 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const url = `https://www.goodreads.com/book/auto_complete?format=json&q=${encodeURIComponent(query)}`
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch data from Goodreads API');
+    let searchParameters = {
+      'q'         : query,
+      'query_by'  : 'title',
+      'sort_by'   : 'relevance:desc'
     }
-
-    const data = await response.json();
-    return data.map((book) => ({
-      bookId: book.bookId,
-      bookUrl: book.bookUrl,
-      imageUrl: book.imageUrl,
-      title: book.bookTitleBare,
-      author: book?.author?.name || '',
-    }));
     
+    const response = await client.collections('books').documents().search(searchParameters)
+    return response.hits.map((book) => ({
+      bookId: book.document.wikidata_id,
+      title: book.document.title,
+      author: book.document.authors.join(', '),
+    }))
   } catch (error) {
     console.error('Error suggesting book:', error);
     throw createError({
