@@ -56,6 +56,21 @@
           {{ isLoading ? 'Generating...' : 'Generate' }}
         </UButton>
       </UForm>
+      <div class="text-xs text-gray-500 flex items-center mt-1">
+        <UTooltip :ui="{ base: 'h-fit overflow-visible whitespace-normal' }">
+          <div class="flex items-center">
+            <UIcon name="i-heroicons-information-circle" class="mr-1" />
+            <span>About the search results</span>
+          </div>
+          <template #text>
+            <div class="italic">
+              The search results are from the Wikidata database. If a book is
+              not found, the reason is most likely that the book is not in the
+              Wikidata database.
+            </div>
+          </template>
+        </UTooltip>
+      </div>
     </div>
     
     <div v-if="isLoading" class="mt-8 flex justify-center">
