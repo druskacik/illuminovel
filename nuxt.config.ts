@@ -3,7 +3,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@unlok-co/nuxt-stripe'],
-  extends: ['nuxt-umami'],
   runtimeConfig: {
     public: {
       baseUrl: '',
@@ -14,6 +13,18 @@ export default defineNuxtConfig({
     stripe: {
       key: '',
     },
+  },
+  app: {
+    head: {
+      script: [
+        {
+          src: 'https://umami.cr.bswatcher.com/script.js',
+          'data-website-id': '6d9e4194-7466-4609-8c76-89b6f32977df',
+          async: true,
+          defer: true,
+        }
+      ]
+    }
   },
   colorMode: {
     preference: 'light'

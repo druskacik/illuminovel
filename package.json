@@ -30,7 +30,6 @@
     "mustache": "^4.2.0",
     "nodemailer": "^6.9.15",
     "nuxt": "^3.13.0",
-    "nuxt-umami": "^2.6.4",
     "openai": "^4.67.3",
     "pg": "^8.13.0",
     "typesense": "^1.8.2",
