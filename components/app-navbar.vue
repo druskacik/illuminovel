@@ -6,7 +6,7 @@
           <NuxtLink to="/" class="text-xl font-bold text-gray-800">Illuminovel</NuxtLink>
         </div>
         <div class="hidden sm:flex sm:items-center sm:space-x-8">
-          <NuxtLink 
+          <!-- <NuxtLink 
             to="/illustrations" 
             :class="[
               'inline-flex items-center px-1 pt-1 text-sm font-medium h-full',
@@ -16,7 +16,7 @@
             ]"
           >
             Illustrations
-          </NuxtLink>
+          </NuxtLink> -->
           <NuxtLink 
             to="/about" 
             :class="[

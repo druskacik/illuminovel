@@ -3,9 +3,6 @@
     <h1 class="text-4xl md:text-5xl font-bold text-center mb-8">
       Soundtrack for your favorite book in seconds
     </h1>
-    <div class="text-center text-sm text-gray-500 text-red-400 mb-8">
-      Note: the generation was down for a few days, I apologise for the inconvenience. Everything should be working now!
-    </div>
     <div class="max-w-md mx-auto mb-12">
       <UForm @submit="handleSubmit" class="flex flex-col md:flex-row md:items-center">
         <div class="flex-grow mb-2 md:mb-0 md:mr-2">
